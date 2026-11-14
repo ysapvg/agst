@@ -109,13 +109,16 @@ const isMouseNear = ref(false)
 const isDragging = ref(false)
 const hasDragged = ref(false)
 const translateX = ref(0)
+const renderedTranslateX = ref(0)
 
 const BASE_SPEED = 0.75 // Kecepatan jalan lambat dari kanan ke kiri (px per frame)
+const LOW_FPS_INTERVAL = 80 // ~12.5 FPS stop-motion feel untuk pergerakan visual
 let currentSpeed = BASE_SPEED
 let inertiaVelocity = 0
 let dragStartX = 0
 let dragStartTranslateX = 0
 let lastDragX = 0
+let lastFpsTick = 0
 let rafId: number | null = null
 
 const wrapTranslateX = () => {
@@ -126,13 +129,15 @@ const wrapTranslateX = () => {
   // Biar digeser ke kanan (mundur) atau ke kiri (maju) tetap nyambung tanpa batas (infinite loop)
   while (translateX.value > 0) {
     translateX.value -= setWidth
+    renderedTranslateX.value = Math.round(translateX.value)
   }
   while (translateX.value <= -setWidth) {
     translateX.value += setWidth
+    renderedTranslateX.value = Math.round(translateX.value)
   }
 }
 
-const tickMarquee = () => {
+const tickMarquee = (timestamp: number) => {
   if (showWorks.value && stripTrackRef.value) {
     if (isDragging.value) {
       currentSpeed = 0
@@ -155,6 +160,12 @@ const tickMarquee = () => {
         translateX.value -= currentSpeed
         wrapTranslateX()
       }
+    }
+
+    // Quantize visual update ke ~12 FPS supaya pergerakan punya vibe low-FPS stop-motion yang konsisten
+    if (timestamp - lastFpsTick >= LOW_FPS_INTERVAL) {
+      renderedTranslateX.value = Math.round(translateX.value)
+      lastFpsTick = timestamp
     }
   }
   rafId = requestAnimationFrame(tickMarquee)
@@ -568,7 +579,7 @@ const handleWorksClick = async (e: Event) => {
         <div
           ref="stripTrackRef"
           class="works-strip-track"
-          :style="{ transform: `translate3d(${translateX}px, 0, 0)` }"
+          :style="{ transform: `translate3d(${renderedTranslateX}px, 0, 0)` }"
         >
           <LaggyMedia
             v-for="item in LOOP_WORKS"

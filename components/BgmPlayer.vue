@@ -7,7 +7,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 // ---------------------------------------------------------------------------
 const PLAYLIST_TRACKS: string[] = [
   'm0nSqRV-QSk', // Track 1 (default)
-  'KLVvsHcpZb8', // Track 2 (lofi hip hop radio / chill)
+  'oR30PyN0CPg', // Track 2 (lofi hip hop radio / chill)
   'sKJvJCsey84', // Track 3 (synthwave / dark ambient)
 ]
 

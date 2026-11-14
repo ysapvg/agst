@@ -213,7 +213,7 @@ body {
     overflow: hidden;
     opacity: 0;
     mix-blend-mode: multiply;
-    transition: opacity 0.85s ease;
+    transition: opacity 0.8s steps(8, end);
 }
 
 .yt-bg-video-stage.is-active {
@@ -254,7 +254,7 @@ body {
     gap: 14px;
     user-select: none;
     opacity: 0.65;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.24s steps(3, end);
 }
 
 .bgm-minimal:hover,
@@ -270,7 +270,7 @@ body {
     padding: 5px 12px;
     background-color: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(6px);
-    animation: fadeInSlide 0.18s ease-out;
+    animation: fadeInSlide 0.28s steps(4, end) forwards;
 }
 
 .bgm-playlist-nav {
@@ -291,7 +291,7 @@ body {
     color: var(--text-color);
     opacity: 0.55;
     cursor: pointer;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.16s steps(2, end);
 }
 
 .bgm-nav-btn:hover {
@@ -346,7 +346,7 @@ body {
     text-decoration: underline;
     text-decoration-thickness: 1.5px;
     text-underline-offset: 4px;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.24s steps(3, end);
     text-transform: lowercase;
 }
 
@@ -362,7 +362,7 @@ body {
     padding: 6px 14px;
     background-color: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(6px);
-    animation: fadeInSlide 0.18s ease-out;
+    animation: fadeInSlide 0.28s steps(4, end) forwards;
 }
 
 @keyframes fadeInSlide {
@@ -409,7 +409,7 @@ body {
     border-radius: 50%;
     background: var(--text-color);
     cursor: pointer;
-    transition: transform 0.15s ease;
+    transition: transform 0.16s steps(2, end);
 }
 
 .minimal-slider::-webkit-slider-thumb:hover {
@@ -438,7 +438,7 @@ body {
     border: 1px solid rgba(0, 0, 0, 0.2);
     padding: 0;
     cursor: pointer;
-    transition: transform 0.15s ease;
+    transition: transform 0.16s steps(2, end);
 }
 
 .color-dot:hover,
@@ -506,9 +506,9 @@ body {
     overflow: hidden;
     padding: 0;
     flex-shrink: 0;
-    animation: spin 4.5s linear infinite;
+    animation: spin 5.2s steps(20, end) infinite;
     animation-play-state: paused;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.22s steps(3, end), border-color 0.22s steps(3, end);
 }
 
 .bgm-minimal:hover .vinyl-disc {
@@ -567,7 +567,7 @@ body {
 .bgm-track-marquee span {
     display: inline-block;
     padding-left: 10%;
-    animation: marquee 16s linear infinite;
+    animation: marquee 18s steps(72, end) infinite;
 }
 
 @keyframes marquee {
@@ -609,7 +609,7 @@ body {
 .work-item {
     flex-shrink: 0;
     cursor: pointer;
-    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+    transition: transform 0.25s steps(4, end), opacity 0.25s steps(4, end);
 }
 
 .work-item:hover {
@@ -637,7 +637,7 @@ body {
 
 .laggy-img.is-loaded {
     animation-name: laggyRender;
-    animation-timing-function: steps(15, end);
+    animation-timing-function: steps(10, end);
     animation-fill-mode: forwards;
 }
 
@@ -678,12 +678,12 @@ body {
     object-fit: contain;
     display: block;
     box-shadow: 0 24px 64px rgba(0, 0, 0, 0.16);
-    animation: laggyRender 0.55s steps(12, end) forwards;
+    animation: laggyRender 0.65s steps(10, end) forwards;
 }
 
 .poster-focus-enter-active,
 .poster-focus-leave-active {
-    transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
+    transition: opacity 0.3s steps(5, end), backdrop-filter 0.3s steps(5, end);
 }
 
 .poster-focus-enter-from,

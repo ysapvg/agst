@@ -16,23 +16,25 @@ let intervalId: ReturnType<typeof setInterval> | null = null
 
 const triggerScramble = () => {
   let iteration = 0
+  const step = Math.max(0.35, props.label.length / 10)
   if (intervalId) clearInterval(intervalId)
 
   intervalId = setInterval(() => {
     displayText.value = props.label
       .split('')
       .map((char, index) => {
-        if (index < iteration) return props.label[index]
+        if (index < Math.floor(iteration)) return props.label[index]
         if (char === ' ') return ' '
         return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)]
       })
       .join('')
 
     if (iteration >= props.label.length) {
+      displayText.value = props.label
       if (intervalId) clearInterval(intervalId)
     }
-    iteration += 0.5
-  }, 30)
+    iteration += step
+  }, 85)
 }
 
 onUnmounted(() => {
