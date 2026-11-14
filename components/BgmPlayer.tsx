@@ -59,7 +59,6 @@ export default function BgmPlayer() {
         if (!ytPlayer) return;
 
         const state = ytPlayer.getPlayerState();
-        
         if (state === 1) {
             ytPlayer.pauseVideo();
             setIsPlaying(false);
@@ -72,22 +71,31 @@ export default function BgmPlayer() {
     return (
         <>
             <div id="yt-player-container" style={{ display: 'none' }}></div>
-            {/* CONTAINER SLEEK ALA SHADCN */}
-            <div className="bgm-sleek">
-                {/* TOMBOL CIRCLE SEKALIGUS VINYL */}
+            
+            {/* BRUTALIST HARDWARE-STYLE AUDIO WIDGET */}
+            <div className="bgm-brutalist-widget">
                 <button 
-                    className={`vinyl-btn ${isPlaying ? 'is-playing' : ''}`}
+                    className={`vinyl-btn-brutal ${isPlaying ? 'is-playing' : ''}`}
                     onClick={togglePlay}
                     onTouchStart={togglePlay}
+                    title={isPlaying ? "PAUSE AUDIO" : "PLAY AUDIO"}
                 >
-                    <img src={`https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`} alt="vinyl" />
-                    <div className="vinyl-hole"></div>
+                    <img src={`https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`} alt="vinyl tape" />
+                    <div className="vinyl-hole-brutal"></div>
                 </button>
                 
-                {/* TEXT MARQUEE CLEAN */}
-                <div className="bgm-info sys-text">
-                    <div className="bgm-marquee">
-                        <span>{trackInfo.title} • {trackInfo.author} &nbsp;&nbsp;&nbsp;***&nbsp;&nbsp;&nbsp; {trackInfo.title} • {trackInfo.author} &nbsp;&nbsp;&nbsp;***&nbsp;&nbsp;&nbsp;</span>
+                <div className="bgm-details">
+                    <div className="bgm-status-row">
+                        <span>{isPlaying ? 'PLAYING [REC]' : 'AUDIO [STANDBY]'}</span>
+                        <div className={`bgm-eq ${isPlaying ? 'is-playing' : ''}`}>
+                            <div className="bgm-eq-bar"></div>
+                            <div className="bgm-eq-bar"></div>
+                            <div className="bgm-eq-bar"></div>
+                            <div className="bgm-eq-bar"></div>
+                        </div>
+                    </div>
+                    <div className="bgm-marquee-box">
+                        <span>{trackInfo.title} • {trackInfo.author} &nbsp;&nbsp;&nbsp;+++&nbsp;&nbsp;&nbsp; {trackInfo.title} • {trackInfo.author}</span>
                     </div>
                 </div>
             </div>
