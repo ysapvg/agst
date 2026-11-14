@@ -1,16 +1,38 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 
-const YOUTUBE_VIDEO_ID = 'm0nSqRV-QSk'
+// ---------------------------------------------------------------------------
+// DAFTAR PLAYLIST YOUTUBE (Bisa masukin Video ID atau Link YouTube langsung!)
+// Tinggal tambah/ganti link atau ID di bawah ini sesuka hati:
+// ---------------------------------------------------------------------------
+const PLAYLIST_TRACKS: string[] = [
+  'm0nSqRV-QSk', // Track 1 (default)
+  'jfKfPfyJRdk', // Track 2 (lofi hip hop radio / chill)
+  '4xDzrJKXOOY', // Track 3 (synthwave / dark ambient)
+]
+
+// Helper: otomatis ekstrak ID kalau yang dimasukin link penuh (youtube.com/watch?v=... atau youtu.be/...)
+const extractVideoId = (input: string): string => {
+  const trimmed = input.trim()
+  const regExp = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/
+  const match = trimmed.match(regExp)
+  return match ? match[1] : trimmed
+}
+
+const normalizedTracks = computed(() => PLAYLIST_TRACKS.map(extractVideoId))
+const currentIndex = ref(0)
+const currentVideoId = computed(() => normalizedTracks.value[currentIndex.value] || 'm0nSqRV-QSk')
 
 const isPlaying = ref(false)
+const isControlsOpen = ref(false) // Umpetin volume & ganti lagu sampai dibuka
 const volume = ref(75)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ytPlayer = ref<any>(null)
-const trackInfo = ref({ title: 'LOADING...', author: '' })
+const trackInfo = ref({ title: 'loading...', author: '' })
 
-onMounted(() => {
-  fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${YOUTUBE_VIDEO_ID}`)
+const fetchTrackMetadata = (videoId: string) => {
+  trackInfo.value = { title: 'loading...', author: '' }
+  fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`)
     .then((res) => res.json())
     .then((data) => {
       if (data.title) {
@@ -18,15 +40,27 @@ onMounted(() => {
           title: data.title.toLowerCase(),
           author: data.author_name ? data.author_name.toLowerCase() : '',
         }
+      } else {
+        trackInfo.value = { title: `track 0${currentIndex.value + 1}`, author: '' }
       }
     })
-    .catch((err) => console.error('Error fetching YT data', err))
+    .catch(() => {
+      trackInfo.value = { title: `track 0${currentIndex.value + 1}`, author: '' }
+    })
+}
+
+watch(currentVideoId, (newId) => {
+  fetchTrackMetadata(newId)
+})
+
+onMounted(() => {
+  fetchTrackMetadata(currentVideoId.value)
 
   const initPlayer = () => {
     new (window as any).YT.Player('yt-player-container', {
       height: '100%',
       width: '100%',
-      videoId: YOUTUBE_VIDEO_ID,
+      videoId: currentVideoId.value,
       host: 'https://www.youtube-nocookie.com',
       playerVars: {
         autoplay: 0,
@@ -37,8 +71,6 @@ onMounted(() => {
         modestbranding: 1,
         rel: 0,
         showinfo: 0,
-        loop: 1,
-        playlist: YOUTUBE_VIDEO_ID,
         playsinline: 1,
       },
       events: {
@@ -47,11 +79,13 @@ onMounted(() => {
           ytPlayer.value.setVolume(volume.value)
         },
         onStateChange: (event: any) => {
-          // 1 = PLAYING, 2 = PAUSED, 0 = ENDED
+          // 1 = PLAYING, 2 = PAUSED, 0 = ENDED (otomatis lanjut lagu berikutnya!)
           if (event.data === 1) {
             isPlaying.value = true
-          } else if (event.data === 2 || event.data === 0) {
+          } else if (event.data === 2) {
             isPlaying.value = false
+          } else if (event.data === 0) {
+            nextTrack(true)
           }
         },
       },
@@ -88,6 +122,28 @@ const togglePlay = (e: Event) => {
   }
 }
 
+const loadCurrentTrack = (autoPlayAfterLoad = true) => {
+  if (!ytPlayer.value || typeof ytPlayer.value.loadVideoById !== 'function') return
+  if (autoPlayAfterLoad || isPlaying.value) {
+    ytPlayer.value.loadVideoById(currentVideoId.value)
+    ytPlayer.value.setVolume(volume.value)
+    isPlaying.value = true
+  } else {
+    ytPlayer.value.cueVideoById(currentVideoId.value)
+  }
+}
+
+const nextTrack = (forcePlay = false) => {
+  currentIndex.value = (currentIndex.value + 1) % normalizedTracks.value.length
+  loadCurrentTrack(forcePlay || isPlaying.value)
+}
+
+const prevTrack = () => {
+  currentIndex.value =
+    (currentIndex.value - 1 + normalizedTracks.value.length) % normalizedTracks.value.length
+  loadCurrentTrack(isPlaying.value)
+}
+
 const handleVolumeChange = () => {
   if (ytPlayer.value && typeof ytPlayer.value.setVolume === 'function') {
     ytPlayer.value.setVolume(volume.value)
@@ -109,22 +165,30 @@ const handleVolumeChange = () => {
       </div>
     </Teleport>
 
-    <!-- MINIMALIST BORDERLESS VINYL PLAYER + VOLUME SLIDER -->
-    <div class="bgm-minimal-wrap">
-      <div class="bgm-minimal" @click="togglePlay">
+    <!-- MINIMALIST BORDERLESS VINYL PLAYER + HIDDEN VOLUME/PLAYLIST PANEL -->
+    <div :class="['bgm-minimal-wrap', { 'is-open': isControlsOpen }]">
+      <div class="bgm-minimal">
+        <!-- KLIK PIRINGAN VINYL = PLAY / PAUSE -->
         <button
           :class="['vinyl-disc', { 'is-playing': isPlaying }]"
-          :title="isPlaying ? 'pause' : 'play'"
+          :title="isPlaying ? 'pause music' : 'play music'"
           aria-label="Toggle music"
+          @click="togglePlay"
         >
           <img
-            :src="`https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`"
+            :src="`https://img.youtube.com/vi/${currentVideoId}/hqdefault.jpg`"
             alt="vinyl"
           />
           <div class="vinyl-center-hole"></div>
         </button>
 
-        <div :class="['bgm-track-wrap', { 'is-active': isPlaying }]">
+        <!-- KLIK JUDUL LAGU = BUKA / TUTUP SLIDER VOLUME & GANTI LAGU -->
+        <button
+          type="button"
+          :class="['bgm-track-wrap', { 'is-active': isPlaying }]"
+          title="click to open volume & playlist controls"
+          @click="isControlsOpen = !isControlsOpen"
+        >
           <div class="bgm-track-marquee">
             <span>
               {{ trackInfo.title }}<template v-if="trackInfo.author"> — {{ trackInfo.author }}</template>
@@ -133,22 +197,38 @@ const handleVolumeChange = () => {
               &nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
           </div>
-        </div>
+        </button>
       </div>
 
-      <!-- SLIDER VOLUME -->
-      <div class="bgm-volume-control" @click.stop @mousedown.stop @touchstart.stop>
-        <label class="bgm-vol-label">vol</label>
-        <input
-          v-model.number="volume"
-          type="range"
-          min="0"
-          max="100"
-          step="1"
-          class="minimal-slider bgm-vol-slider"
-          title="volume"
-          @input="handleVolumeChange"
-        />
+      <!-- PANEL VOLUME & PLAYLIST YANG DI-HIDE (BARU MUNCUL PAS JUDUL LAGU DIKLIK) -->
+      <div v-if="isControlsOpen" class="bgm-hidden-panel" @click.stop @mousedown.stop @touchstart.stop>
+        <!-- TOMBOL PREV / NEXT PLAYLIST -->
+        <div v-if="normalizedTracks.length > 1" class="bgm-playlist-nav">
+          <button type="button" class="bgm-nav-btn" title="previous track" @click="prevTrack">
+            &lt;&lt;
+          </button>
+          <span class="bgm-track-counter">
+            {{ currentIndex + 1 }}/{{ normalizedTracks.length }}
+          </span>
+          <button type="button" class="bgm-nav-btn" title="next track" @click="nextTrack(true)">
+            &gt;&gt;
+          </button>
+        </div>
+
+        <!-- SLIDER VOLUME -->
+        <div class="bgm-volume-control">
+          <label class="bgm-vol-label">vol</label>
+          <input
+            v-model.number="volume"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            class="minimal-slider bgm-vol-slider"
+            title="volume"
+            @input="handleVolumeChange"
+          />
+        </div>
       </div>
     </div>
   </div>
