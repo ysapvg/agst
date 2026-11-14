@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   app: {
     head: {
-      title: 'agst',
+      title: 'ysagst',
       htmlAttrs: {
         lang: 'en',
       },
