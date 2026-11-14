@@ -190,7 +190,52 @@ body {
     user-select: none;
 }
 
-/* --- BGM PLAYER MINIMALIST (NO BOX) --- */
+/* --- FULLSCREEN LOW-OPACITY YOUTUBE VIDEO BACKGROUND --- */
+.yt-bg-video-stage {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 25;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0;
+    mix-blend-mode: multiply;
+    transition: opacity 0.85s ease;
+}
+
+.yt-bg-video-stage.is-active {
+    opacity: 0.16;
+}
+
+.yt-bg-video-Aspect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 56.25vw; /* 16:9 ratio */
+    min-height: 100vh;
+    min-width: 177.78vh; /* 16:9 ratio */
+    transform: translate(-50%, -50%) scale(1.08);
+    pointer-events: none;
+}
+
+.yt-bg-video-Aspect iframe,
+#yt-player-container {
+    width: 100% !important;
+    height: 100% !important;
+    border: 0;
+    pointer-events: none;
+}
+
+/* --- BGM PLAYER MINIMALIST (NO BOX) + VOLUME SLIDER --- */
+.bgm-minimal-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    user-select: none;
+}
+
 .bgm-minimal {
     display: flex;
     align-items: center;
@@ -204,6 +249,32 @@ body {
 .bgm-minimal:hover,
 .bgm-minimal:has(.is-playing) {
     opacity: 1;
+}
+
+.bgm-volume-control {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    letter-spacing: -0.01em;
+    color: var(--text-color);
+    opacity: 0.65;
+    transition: opacity 0.2s ease;
+    text-transform: lowercase;
+}
+
+.bgm-minimal-wrap:hover .bgm-volume-control,
+.bgm-minimal-wrap:has(.is-playing) .bgm-volume-control {
+    opacity: 1;
+}
+
+.bgm-vol-label {
+    opacity: 0.65;
+}
+
+.bgm-vol-slider {
+    width: 68px;
 }
 
 /* --- CUSTOM YOUR OWN <3 INTERACTIVE WIDGET --- */
@@ -650,11 +721,20 @@ body {
     }
 
     .bgm-track-wrap {
-        width: 115px;
+        width: 95px;
     }
 
     .bgm-track-marquee {
         font-size: 0.78rem;
+    }
+
+    .bgm-volume-control {
+        font-size: 0.75rem;
+        gap: 5px;
+    }
+
+    .bgm-vol-slider {
+        width: 52px;
     }
 
     .customizer-Sep {
