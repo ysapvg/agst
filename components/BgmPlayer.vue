@@ -7,8 +7,8 @@ import { ref, computed, onMounted, watch } from 'vue'
 // ---------------------------------------------------------------------------
 const PLAYLIST_TRACKS: string[] = [
   'm0nSqRV-QSk', // Track 1 (default)
-  'jfKfPfyJRdk', // Track 2 (lofi hip hop radio / chill)
-  '4xDzrJKXOOY', // Track 3 (synthwave / dark ambient)
+  'KLVvsHcpZb8', // Track 2 (lofi hip hop radio / chill)
+  'sKJvJCsey84', // Track 3 (synthwave / dark ambient)
 ]
 
 // Helper: otomatis ekstrak ID kalau yang dimasukin link penuh (youtube.com/watch?v=... atau youtu.be/...)
