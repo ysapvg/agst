@@ -418,8 +418,9 @@ const handleWorksClick = async (e: Event) => {
         >
           <div class="hero-logo-color-wrapper">
             <img :src="'/agst_landing.png'" alt="ysagst logo" class="hero-logo-img" />
-            <!-- Lapisan screen blend mengubah goresan hitam logo menjadi warna pilihan sambil menjaga background tetap putih murni -->
+            <!-- Masking langsung mengikuti bentuk huruf ysagst tanpa kotak background -->
             <div
+              v-if="logoColor.toLowerCase() !== '#000000'"
               class="hero-logo-color-tint"
               :style="{ backgroundColor: logoColor }"
             ></div>

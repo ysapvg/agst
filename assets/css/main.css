@@ -102,13 +102,17 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ffffff;
+    background: transparent;
+    border: none;
+    outline: none;
 }
 
 .hero-logo-color-wrapper {
     position: relative;
     width: 100%;
-    background-color: #ffffff;
+    background: transparent;
+    border: none;
+    outline: none;
 }
 
 .hero-logo-img {
@@ -116,14 +120,22 @@ body {
     height: auto;
     display: block;
     object-fit: contain;
-    filter: contrast(2.2) brightness(1.05);
+    border: none;
+    outline: none;
 }
 
-/* Screen blend mengubah goresan hitam logo jadi warna apa pun sambil menjaga area putih tetap #ffffff murni */
+/* Masking langsung ke siluet PNG huruf ysagst supaya tidak ada garis kotak di pinggir gambar */
 .hero-logo-color-tint {
     position: absolute;
     inset: 0;
-    mix-blend-mode: screen;
+    -webkit-mask-image: url('/agst_landing.png');
+    mask-image: url('/agst_landing.png');
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
     pointer-events: none;
 }
 
