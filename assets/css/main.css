@@ -1,0 +1,758 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #111111;
+    --link-blue: #0000ff; 
+    --border-color: #111111;
+    --hover-bg: #f5f5f5;
+    --font-sans: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    --font-mono: 'Consolas', 'Courier New', monospace;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+::selection {
+    background-color: var(--link-blue);
+    color: var(--bg-color);
+}
+
+/* --- BRUTALIST CUSTOM SCROLLBAR --- */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+    border-left: 1px solid var(--text-color);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--text-color);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--link-blue);
+}
+
+/* --- GAYA LANGUAGE SWITCHER --- */
+.lang-switcher { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 24px; font-size: 1.05rem; font-family: var(--font-sans); letter-spacing: -0.01em; }
+.lang-switcher a { color: #777777; text-decoration: none; transition: color 0.1s steps(2); }
+.lang-switcher a:hover, .lang-switcher a.active { color: #ffffff; font-weight: 700; }
+.lang-divider { color: #666666; }
+.lang-hidden { display: none; }
+
+/* --- TYPOGRAPHY & LAYOUT UTAMA (HELVETICA APPROACH) --- */
+body {
+    background-color: #ffffff;
+    color: var(--text-color);
+    font-family: var(--font-sans);
+    letter-spacing: -0.02em;
+    line-height: 1.32; 
+    min-height: 100vh; 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    padding: 0;
+    overflow-x: hidden;
+    cursor: default;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.page-stage {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+.container { width: 100%; margin: 0 auto; position: relative; }
+
+/* --- OVERLAP ZONE: FULL VIEWPORT WIDTH SO FIREFOX NEVER CLIPS THE LOGO --- */
+.overlap-zone {
+    position: relative;
+    width: 100vw;
+    min-height: 85vh;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff;
+    isolation: isolate;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 20px;
+    overflow: visible;
+}
+
+.hero-logo-backdrop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(var(--logo-scale, 1) * min(94vw, 1180px));
+    max-width: none;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+}
+
+.hero-logo-color-wrapper {
+    position: relative;
+    width: 100%;
+    background-color: #ffffff;
+}
+
+.hero-logo-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    filter: contrast(2.2) brightness(1.05);
+}
+
+/* Screen blend mengubah goresan hitam logo jadi warna apa pun sambil menjaga area putih tetap #ffffff murni */
+.hero-logo-color-tint {
+    position: absolute;
+    inset: 0;
+    mix-blend-mode: screen;
+    pointer-events: none;
+}
+
+/* Layer teks dengan mix-blend-mode: difference
+   Teks diberi warna putih (#ffffff):
+   - Di atas background putih (#ffffff) -> tampil HITAM (#000000)
+   - Di atas goresan logo hitam (#000000) -> otomatis berbalik jadi PUTIH (#ffffff) */
+.overlap-text-layer {
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+    color: #ffffff;
+    mix-blend-mode: difference;
+}
+
+.sys-text { font-family: var(--font-sans); font-size: 1.1rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.02em; }
+
+/* --- CONTENT UTAMA --- */
+.content { font-size: 1.46rem; font-weight: 400; margin-bottom: 46px; text-align: justify; letter-spacing: -0.02em; line-height: 1.32; }
+.content p { margin-bottom: 22px; color: #ffffff; transition: color 0s; }
+.content strong { font-weight: 700; padding: 2px 5px; margin: 0 -5px; transition: background-color 0.1s steps(2), color 0.1s steps(2); cursor: crosshair; color: inherit; display: inline-block; }
+/* Highlight kotak + warna otomatis berlawanan saat overlap di atas logo */
+.content strong:hover { background-color: #ffff00 !important; color: #000000 !important; }
+.content a { font-family: var(--font-sans); font-weight: 400; color: inherit; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; background: none; padding: 2px 5px; margin: 0 -2px; transition: background-color 0.1s steps(2), color 0.1s steps(2); text-transform: lowercase; display: inline-block; }
+.content a:hover { background-color: #ffff00 !important; color: #000000 !important; text-decoration: none; }
+
+/* --- LINKS SECTION --- */
+.links-section { margin-bottom: 0; }
+.inline-links { list-style: none; padding: 14px 0; margin: 0; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
+.inline-links a { font-family: var(--font-sans); font-weight: 400; font-size: 1.18rem; letter-spacing: -0.01em; color: #ffffff; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; background: none; padding: 2px 5px; text-transform: lowercase; transition: background-color 0.1s steps(2), color 0.1s steps(2); cursor: pointer; display: inline-block; }
+.inline-links a:hover { background-color: #ffff00; color: #000000; text-decoration: none; }
+
+/* --- MODAL WORKS (Commission / System Prompt) --- */
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.92); z-index: 999; justify-content: center; align-items: center; }
+.modal.show { display: flex; }
+.modal-content { background-color: var(--bg-color); border: 2px solid var(--text-color); box-shadow: 6px 6px 0px var(--text-color); padding: 20px; max-width: 500px; width: 90%; }
+.modal-content pre { line-height: 1.1; margin: 0; }
+.modal-text { margin: 20px 0; text-transform: lowercase; }
+.modal-text p { margin-bottom: 12px; line-height: 1.4; }
+.modal-content a { color: var(--bg-color); background-color: var(--link-blue); text-decoration: none; padding: 4px 8px; text-transform: lowercase; transition: background-color 0.1s steps(2); }
+.modal-content a:hover { background-color: var(--text-color); }
+
+.footer-logo { text-align: center; margin-bottom: 20px; min-height: 20px; display: flex; justify-content: center; align-items: center; }
+.footer-logo img { max-width: 220px; max-height: 28px; width: auto; mix-blend-mode: multiply; filter: grayscale(100%) contrast(1.2); }
+
+/* --- BOTTOM LEFT DOCK: BGM PLAYER + CUSTOM YOUR OWN <3 --- */
+.bottom-left-dock {
+    position: fixed;
+    bottom: 28px;
+    left: 28px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.customizer-Sep {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    color: #bbbbbb;
+    user-select: none;
+}
+
+/* --- BGM PLAYER MINIMALIST (NO BOX) --- */
+.bgm-minimal {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    user-select: none;
+    opacity: 0.65;
+    transition: opacity 0.2s ease;
+}
+
+.bgm-minimal:hover,
+.bgm-minimal:has(.is-playing) {
+    opacity: 1;
+}
+
+/* --- CUSTOM YOUR OWN <3 INTERACTIVE WIDGET --- */
+.customizer-widget {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    user-select: none;
+}
+
+.customizer-trigger {
+    background: none;
+    border: none;
+    padding: 4px 0;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    color: var(--text-color);
+    opacity: 0.6;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+    transition: opacity 0.2s ease;
+    text-transform: lowercase;
+}
+
+.customizer-trigger:hover,
+.customizer-widget.is-open .customizer-trigger {
+    opacity: 1;
+}
+
+.customizer-panel {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 6px 14px;
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(6px);
+    animation: fadeInSlide 0.18s ease-out;
+}
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.custom-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    letter-spacing: -0.01em;
+    color: var(--text-color);
+    text-transform: lowercase;
+}
+
+.custom-control label {
+    opacity: 0.65;
+}
+
+.minimal-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 85px;
+    height: 2px;
+    background: rgba(17, 17, 17, 0.25);
+    outline: none;
+    cursor: pointer;
+}
+
+.minimal-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--text-color);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.minimal-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.25);
+}
+
+.minimal-slider::-moz-range-thumb {
+    width: 11px;
+    height: 11px;
+    border: none;
+    border-radius: 50%;
+    background: var(--text-color);
+    cursor: pointer;
+}
+
+.color-dots {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.color-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.color-dot:hover,
+.color-dot.active {
+    transform: scale(1.28);
+    border-color: var(--text-color);
+}
+
+.color-picker-wrap {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px dashed var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0.85 !important;
+}
+
+.native-color-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.color-plus {
+    font-size: 0.7rem;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.custom-reset-btn {
+    background: none;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--text-color);
+    opacity: 0.5;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    padding: 0;
+}
+
+.custom-reset-btn:hover {
+    opacity: 1;
+}
+
+.vinyl-disc {
+    width: 48px;
+    height: 48px;
+    background: none;
+    border: 1px solid rgba(26, 26, 26, 0.25);
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    overflow: hidden;
+    padding: 0;
+    flex-shrink: 0;
+    animation: spin 4.5s linear infinite;
+    animation-play-state: paused;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.bgm-minimal:hover .vinyl-disc {
+    transform: scale(1.06);
+    border-color: var(--text-color);
+}
+
+.vinyl-disc.is-playing {
+    animation-play-state: running;
+    border-color: var(--text-color);
+}
+
+.vinyl-disc img {
+    width: 145%;
+    height: 145%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.2);
+}
+
+.vinyl-center-hole {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--bg-color);
+    border: 1px solid rgba(26, 26, 26, 0.35);
+    border-radius: 50%;
+    z-index: 2;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+.bgm-track-wrap {
+    width: 220px;
+    overflow: hidden;
+    white-space: nowrap;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 88%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 88%, transparent 100%);
+}
+
+.bgm-track-marquee {
+    font-family: var(--font-sans);
+    font-size: 1.02rem;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    color: var(--text-color);
+    text-transform: lowercase;
+}
+
+.bgm-track-marquee span {
+    display: inline-block;
+    padding-left: 10%;
+    animation: marquee 16s linear infinite;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* --- WORKS HORIZONTAL STREAM (KANAN KE KIRI) & LAGGY RENDER EFFECT --- */
+.page-stage.has-works-open .overlap-zone {
+    padding: 55px 0 35px 0;
+}
+
+.works-strip-viewport {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+    padding: 16px 0 90px 0;
+    user-select: none;
+    cursor: grab;
+    touch-action: pan-y;
+}
+
+.works-strip-viewport.is-dragging,
+.works-strip-viewport.is-dragging .work-item {
+    cursor: grabbing;
+}
+
+.works-strip-track {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    width: max-content;
+    will-change: transform;
+    padding: 0 24px;
+}
+
+.work-item {
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+}
+
+.work-item:hover {
+    transform: scale(1.045);
+}
+
+.img-container {
+    height: 240px;
+    width: auto;
+    background: transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.laggy-img {
+    height: 100%;
+    width: auto;
+    max-width: 360px;
+    object-fit: contain; 
+    display: block;
+    -webkit-user-drag: none;
+    user-select: none;
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+}
+
+.laggy-img.is-loaded {
+    animation-name: laggyRender;
+    animation-timing-function: steps(15, end);
+    animation-fill-mode: forwards;
+}
+
+@keyframes laggyRender {
+    0% { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+    100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+/* --- HIGHLIGHT POSTER + BLUR SELAYAR --- */
+.poster-blur-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 28px;
+    background-color: rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    cursor: zoom-out;
+}
+
+.poster-highlight-stage {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 90vw;
+    max-height: 86vh;
+}
+
+.highlighted-raw-media {
+    max-width: 90vw;
+    max-height: 86vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.16);
+    animation: laggyRender 0.55s steps(12, end) forwards;
+}
+
+.poster-focus-enter-active,
+.poster-focus-leave-active {
+    transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+.poster-focus-enter-from,
+.poster-focus-leave-to {
+    opacity: 0;
+}
+
+/* --- RESPONSIVE / MEDIA QUERIES (TABLET & MOBILE) --- */
+@media (max-width: 768px) {
+    body {
+        padding: 0;
+        align-items: center;
+    }
+
+    .page-stage {
+        min-height: 100dvh;
+        justify-content: center;
+    }
+
+    .overlap-zone {
+        width: 100vw;
+        min-height: 100dvh;
+        padding: 60px 22px 110px 22px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Di layar HP/tablet, 100% scale = 95vw agar seluruh huruf 'ysagst' masuk utuh secara proporsional */
+    .hero-logo-backdrop {
+        width: calc(var(--logo-scale, 1) * 95vw);
+    }
+
+    .overlap-text-layer {
+        max-width: 100%;
+        padding: 0 2px;
+    }
+
+    .lang-switcher {
+        font-size: 0.88rem;
+        margin-bottom: 16px;
+        gap: 6px;
+    }
+
+    .content {
+        font-size: 1.08rem;
+        line-height: 1.36;
+        margin-bottom: 28px;
+        letter-spacing: -0.015em;
+    }
+
+    .content p {
+        margin-bottom: 16px;
+    }
+
+    .inline-links {
+        justify-content: space-between;
+        gap: 10px;
+        padding: 8px 0;
+    }
+
+    .inline-links a {
+        font-size: 0.94rem;
+    }
+
+    /* Bottom Dock & Customizer di HP */
+    .bottom-left-dock {
+        bottom: 14px;
+        left: 14px;
+        right: 14px;
+        gap: 10px;
+        justify-content: flex-start;
+        background-color: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(6px);
+        padding: 6px 10px;
+        border-radius: 8px;
+    }
+
+    .vinyl-disc {
+        width: 34px;
+        height: 34px;
+    }
+
+    .vinyl-center-hole {
+        width: 8px;
+        height: 8px;
+    }
+
+    .bgm-track-wrap {
+        width: 115px;
+    }
+
+    .bgm-track-marquee {
+        font-size: 0.78rem;
+    }
+
+    .customizer-Sep {
+        font-size: 0.82rem;
+    }
+
+    .customizer-trigger {
+        font-size: 0.82rem;
+    }
+
+    /* Panel slider muncul mengambang rapi di atas dock bawah pada layar HP */
+    .customizer-panel {
+        position: fixed;
+        bottom: 64px;
+        left: 14px;
+        right: 14px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 12px 16px;
+        padding: 12px 14px;
+        background-color: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(17, 17, 17, 0.15);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .custom-control {
+        font-size: 0.8rem;
+        gap: 8px;
+    }
+
+    .minimal-slider {
+        width: 95px;
+        height: 3px;
+    }
+
+    .minimal-slider::-webkit-slider-thumb {
+        width: 15px;
+        height: 15px;
+    }
+
+    .minimal-slider::-moz-range-thumb {
+        width: 15px;
+        height: 15px;
+    }
+
+    .color-dot {
+        width: 18px;
+        height: 18px;
+    }
+
+    .color-picker-wrap {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Stream Karya Horizontal di HP */
+    .page-stage.has-works-open .overlap-zone {
+        min-height: auto;
+        padding: 45px 22px 24px 22px;
+    }
+
+    .works-strip-viewport {
+        padding: 10px 0 95px 0;
+    }
+
+    .works-strip-track {
+        gap: 14px;
+        padding: 0 14px;
+    }
+
+    .img-container {
+        height: 175px;
+    }
+
+    .laggy-img {
+        max-width: 260px;
+    }
+
+    .poster-blur-overlay {
+        padding: 16px;
+    }
+
+    .highlighted-raw-media {
+        max-width: 94vw;
+        max-height: 80vh;
+    }
+}
+
+@media (max-width: 400px) {
+    .content {
+        font-size: 0.98rem;
+    }
+
+    .inline-links a {
+        font-size: 0.85rem;
+    }
+
+    .bgm-track-wrap {
+        width: 90px;
+    }
+}
