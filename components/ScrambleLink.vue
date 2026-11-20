@@ -16,7 +16,7 @@ let intervalId: ReturnType<typeof setInterval> | null = null
 
 const triggerScramble = () => {
   let iteration = 0
-  const step = Math.max(0.35, props.label.length / 10)
+  const step = Math.max(0.45, props.label.length / 9)
   if (intervalId) clearInterval(intervalId)
 
   intervalId = setInterval(() => {
@@ -34,7 +34,7 @@ const triggerScramble = () => {
       if (intervalId) clearInterval(intervalId)
     }
     iteration += step
-  }, 85)
+  }, 42)
 }
 
 onUnmounted(() => {

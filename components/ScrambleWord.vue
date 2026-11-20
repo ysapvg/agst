@@ -18,8 +18,8 @@ watch(
 
 const triggerScramble = () => {
   let iteration = 0
-  // Proporsional supaya kata pendek maupun kalimat panjang tetap jalan ~9-11 frame di ~11 FPS (85ms/frame)
-  const step = Math.max(0.35, props.label.length / 10)
+  // ~24 FPS (42ms/frame) supaya scramble tetap kelihatan jelas tapi responsif & gak berasa ngelag
+  const step = Math.max(0.45, props.label.length / 9)
   if (intervalId) clearInterval(intervalId)
 
   intervalId = setInterval(() => {
@@ -37,7 +37,7 @@ const triggerScramble = () => {
       if (intervalId) clearInterval(intervalId)
     }
     iteration += step
-  }, 85)
+  }, 42)
 }
 
 onUnmounted(() => {
