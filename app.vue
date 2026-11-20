@@ -282,11 +282,11 @@ const closeHighlight = () => {
 const isCustomOpen = ref(false)
 const logoScale = ref(100) // 0 (hilang) s/d 180 (sebesar layar penuh)
 const logoOpacity = ref(100) // 0% s/d 100%
-const logoColor = ref('#000000') // warna goresan logo
+const logoColor = ref('#ffffff') // warna goresan logo (putih untuk background hitam)
 
 const colorPresets = [
-  { name: 'black', hex: '#000000' },
-  { name: 'blue', hex: '#0000ff' },
+  { name: 'white', hex: '#ffffff' },
+  { name: 'blue', hex: '#00a5ff' },
   { name: 'red', hex: '#ff1e1e' },
   { name: 'green', hex: '#00b862' },
   { name: 'purple', hex: '#8b2cf5' },
@@ -296,7 +296,7 @@ const colorPresets = [
 const resetCustomLogo = () => {
   logoScale.value = 100
   logoOpacity.value = 100
-  logoColor.value = '#000000'
+  logoColor.value = '#ffffff'
 }
 
 const heroLogoStyle = computed(() => {
@@ -420,7 +420,7 @@ const handleWorksClick = async (e: Event) => {
             <img :src="'/agst_landing.png'" alt="ysagst logo" class="hero-logo-img" />
             <!-- Masking langsung mengikuti bentuk huruf ysagst tanpa kotak background -->
             <div
-              v-if="logoColor.toLowerCase() !== '#000000'"
+              v-if="logoColor.toLowerCase() !== '#ffffff'"
               class="hero-logo-color-tint"
               :style="{ backgroundColor: logoColor }"
             ></div>
@@ -429,6 +429,18 @@ const handleWorksClick = async (e: Event) => {
 
         <!-- LAYER TEKS YANG OVERLAP DENGAN WARNA BERLAWANAN OTOMATIS -->
         <div class="overlap-text-layer">
+          <!-- HERO LOOP VIDEO (TEPAT DI ATAS TRANSLATE) -->
+          <div class="hero-video-box">
+            <video
+              src="/hero-loop.mp4"
+              autoplay
+              loop
+              muted
+              playsinline
+              class="hero-loop-video"
+            />
+          </div>
+
           <!-- LANGUAGE SWITCHER -->
           <div class="lang-switcher sys-text">
             <a
