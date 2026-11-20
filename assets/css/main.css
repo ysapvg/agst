@@ -81,69 +81,14 @@ body {
     left: 50%;
     transform: translateX(-50%);
     background-color: #000000;
-    isolation: isolate;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 80px 20px;
+    padding: 60px 20px 80px 20px;
     overflow: visible;
 }
 
-.hero-logo-backdrop {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: calc(var(--logo-scale, 1) * min(94vw, 1180px));
-    max-width: none;
-    z-index: 1;
-    pointer-events: none;
-    user-select: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: transparent;
-    border: none;
-    outline: none;
-}
-
-.hero-logo-color-wrapper {
-    position: relative;
-    width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-}
-
-.hero-logo-img {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: contain;
-    border: none;
-    outline: none;
-    filter: invert(1);
-}
-
-/* Masking langsung ke siluet PNG huruf ysagst supaya tidak ada garis kotak di pinggir gambar */
-.hero-logo-color-tint {
-    position: absolute;
-    inset: 0;
-    -webkit-mask-image: url('/agst_landing.png');
-    mask-image: url('/agst_landing.png');
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    mask-position: center;
-    pointer-events: none;
-}
-
-/* Layer teks dengan mix-blend-mode: difference
-   Teks diberi warna putih (#ffffff):
-   - Di atas background hitam (#000000) -> tampil PUTIH (#ffffff)
-   - Di atas goresan logo putih (#ffffff) -> otomatis berbalik jadi HITAM (#000000) */
+/* Layer teks & konten utama */
 .overlap-text-layer {
     position: relative;
     z-index: 2;
@@ -153,16 +98,10 @@ body {
     color: #ffffff;
 }
 
-.lang-switcher,
-.content,
-.links-section {
-    mix-blend-mode: difference;
-}
-
 /* --- HERO LOOP VIDEO TEPAT DI ATAS TRANSLATE --- */
 .hero-video-box {
     width: 100%;
-    margin-bottom: 24px;
+    margin-bottom: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -742,18 +681,13 @@ body {
         align-items: center;
     }
 
-    /* Di layar HP/tablet, 100% scale = 95vw agar seluruh huruf 'ysagst' masuk utuh secara proporsional */
-    .hero-logo-backdrop {
-        width: calc(var(--logo-scale, 1) * 95vw);
-    }
-
     .overlap-text-layer {
         max-width: 100%;
         padding: 0 2px;
     }
 
     .hero-video-box {
-        margin-bottom: 16px;
+        margin-bottom: 8px;
     }
 
     .lang-switcher {

@@ -278,36 +278,7 @@ const closeHighlight = () => {
   highlightedWork.value = null
 }
 
-// --- FITUR INTERAKTIF: CUSTOM YOUR OWN <3 ---
-const isCustomOpen = ref(false)
-const logoScale = ref(100) // 0 (hilang) s/d 180 (sebesar layar penuh)
-const logoOpacity = ref(100) // 0% s/d 100%
-const logoColor = ref('#ffffff') // warna goresan logo (putih untuk background hitam)
-
-const colorPresets = [
-  { name: 'white', hex: '#ffffff' },
-  { name: 'blue', hex: '#00a5ff' },
-  { name: 'red', hex: '#ff1e1e' },
-  { name: 'green', hex: '#00b862' },
-  { name: 'purple', hex: '#8b2cf5' },
-  { name: 'pink', hex: '#ff1493' },
-]
-
-const resetCustomLogo = () => {
-  logoScale.value = 100
-  logoOpacity.value = 100
-  logoColor.value = '#ffffff'
-}
-
-const heroLogoStyle = computed(() => {
-  return {
-    '--logo-scale': logoScale.value / 100,
-    opacity: logoOpacity.value / 100,
-  }
-})
-
-// Karena teks memakai mix-blend-mode: difference (putih #fff di atas putih #fff = hitam #000),
-// warna hover adalah komplemen agar tampil mencolok di area putih dan berlawanan di atas logo
+// Warna acak saat teks di-hover
 const chaosBlendColors = ['#6ccc15', '#ffff00', '#ef467e', '#00a5ff', '#13b766']
 
 const handleColorActive = (e: Event) => {
@@ -337,97 +308,15 @@ const handleWorksClick = async (e: Event) => {
 
 <template>
   <div :class="['page-stage', { 'has-works-open': showWorks }]">
-    <!-- DOCK KIRI BAWAH: BGM YOUTUBE + CUSTOM YOUR OWN <3 -->
+    <!-- DOCK KIRI BAWAH: BGM YOUTUBE -->
     <div class="bottom-left-dock">
       <BgmPlayer />
-
-      <div class="customizer-Sep">/</div>
-
-      <!-- TRIGGER & HIDDEN SLIDER PANEL: CUSTOM YOUR OWN <3 -->
-      <div :class="['customizer-widget', { 'is-open': isCustomOpen }]">
-        <button
-          class="customizer-trigger"
-          @click="isCustomOpen = !isCustomOpen"
-          title="custom your own <3"
-        >
-          <span>custom your own &lt;3</span>
-        </button>
-
-        <div v-if="isCustomOpen" class="customizer-panel">
-          <!-- SLIDER UKURAN (0 SAMPAI SEBESAR LAYAR) -->
-          <div class="custom-control">
-            <label>size</label>
-            <input
-              v-model.number="logoScale"
-              type="range"
-              min="0"
-              max="180"
-              step="1"
-              class="minimal-slider"
-            />
-          </div>
-
-          <!-- SLIDER OPACITY -->
-          <div class="custom-control">
-            <label>opacity</label>
-            <input
-              v-model.number="logoOpacity"
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              class="minimal-slider"
-            />
-          </div>
-
-          <!-- PILIHAN WARNA LOGO -->
-          <div class="custom-control">
-            <label>color</label>
-            <div class="color-dots">
-              <button
-                v-for="preset in colorPresets"
-                :key="preset.hex"
-                :class="['color-dot', { active: logoColor === preset.hex }]"
-                :style="{ backgroundColor: preset.hex }"
-                :title="preset.name"
-                @click="logoColor = preset.hex"
-              />
-              <label class="color-picker-wrap" title="pick any color">
-                <input v-model="logoColor" type="color" class="native-color-input" />
-                <span class="color-plus">+</span>
-              </label>
-            </div>
-          </div>
-
-          <button class="custom-reset-btn" @click="resetCustomLogo" title="reset default">
-            reset
-          </button>
-        </div>
-      </div>
     </div>
 
     <div class="container">
-      <!-- AREA OVERLAP: LOGO BESAR DI TENGAH + TEKS BERLAWANAN WARNA (DIFFERENCE BLEND) -->
+      <!-- AREA UTAMA -->
       <div class="overlap-zone">
-        <!-- LOGO YSAGST BESAR DI TENGAH SEBAGAI BACKDROP INTERAKTIF -->
-        <div
-          v-show="logoScale > 0 && logoOpacity > 0"
-          class="hero-logo-backdrop"
-          :style="heroLogoStyle"
-          aria-hidden="true"
-        >
-          <div class="hero-logo-color-wrapper">
-            <img :src="'/agst_landing.png'" alt="ysagst logo" class="hero-logo-img" />
-            <!-- Masking langsung mengikuti bentuk huruf ysagst tanpa kotak background -->
-            <div
-              v-if="logoColor.toLowerCase() !== '#ffffff'"
-              class="hero-logo-color-tint"
-              :style="{ backgroundColor: logoColor }"
-            ></div>
-          </div>
-        </div>
-
-        <!-- LAYER TEKS YANG OVERLAP DENGAN WARNA BERLAWANAN OTOMATIS -->
+        <!-- KONTEN UTAMA DENGAN HERO VIDEO -->
         <div class="overlap-text-layer">
           <!-- HERO LOOP VIDEO (TEPAT DI ATAS TRANSLATE) -->
           <div class="hero-video-box">
