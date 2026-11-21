@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 
 // ---------------------------------------------------------------------------
 // DAFTAR PLAYLIST YOUTUBE (Bisa masukin Video ID atau Link YouTube langsung!)
@@ -105,7 +105,23 @@ onMounted(() => {
       initPlayer()
     }
   }
+
+  window.addEventListener('click', handleDocClick)
+  window.addEventListener('touchstart', handleDocClick, { passive: true })
 })
+
+onUnmounted(() => {
+  window.removeEventListener('click', handleDocClick)
+  window.removeEventListener('touchstart', handleDocClick)
+})
+
+const handleDocClick = (e: Event) => {
+  if (!isControlsOpen.value) return
+  const target = e.target as HTMLElement | null
+  if (target && !target.closest('.bottom-left-dock')) {
+    isControlsOpen.value = false
+  }
+}
 
 const togglePlay = (e: Event) => {
   e.preventDefault()

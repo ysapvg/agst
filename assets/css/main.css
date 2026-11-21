@@ -506,77 +506,144 @@ body {
 @media (max-width: 768px) {
     body {
         padding: 0;
-        align-items: center;
+        align-items: flex-start;
     }
 
     .page-stage {
         min-height: 100dvh;
-        justify-content: center;
+        justify-content: flex-start;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100vw;
     }
 
     .overlap-zone {
-        width: 100vw;
-        min-height: 100dvh;
-        padding: 60px 22px 110px 22px;
+        width: 100%;
+        max-width: 100vw;
+        min-height: auto;
+        left: 0;
+        transform: none;
+        padding: max(24px, env(safe-area-inset-top)) 20px max(110px, env(safe-area-inset-bottom)) 20px;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        justify-content: flex-start;
         align-items: center;
+        box-sizing: border-box;
     }
 
     .overlap-text-layer {
         max-width: 100%;
-        padding: 0 2px;
+        width: 100%;
+        padding: 0 4px;
+        box-sizing: border-box;
     }
 
     .hero-video-box {
-        margin-bottom: 8px;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 6px;
+        margin-bottom: 6px;
+        overflow: hidden;
+    }
+
+    .hero-loop-video {
+        width: 100%;
+        transform: scale(1.08);
+        transform-origin: center center;
     }
 
     .lang-switcher {
         font-size: 0.88rem;
-        margin-bottom: 16px;
-        gap: 6px;
+        margin-top: 6px;
+        margin-bottom: 22px;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+
+    .lang-switcher a {
+        padding: 2px 4px;
     }
 
     .content {
-        font-size: 1.05rem;
-        line-height: 1.48;
-        margin-bottom: 24px;
-        letter-spacing: -0.01em;
+        font-size: 1.06rem;
+        line-height: 1.62;
+        margin-bottom: 30px;
+        letter-spacing: -0.015em;
         text-align: left;
+        text-wrap: pretty;
     }
 
     .content p {
-        margin-bottom: 16px;
+        margin-bottom: 18px;
+    }
+
+    .content strong,
+    .content a {
+        padding: 1px 3px;
+        margin: 0;
+    }
+
+    .links-section {
+        margin-top: 4px;
+        margin-bottom: 0;
     }
 
     .inline-links {
+        display: flex;
         justify-content: space-between;
-        gap: 10px;
-        padding: 8px 0;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        flex-wrap: wrap;
     }
 
     .inline-links a {
-        font-size: 0.94rem;
+        font-size: 0.96rem;
+        letter-spacing: 0.01em;
+        padding: 3px 6px;
+        white-space: nowrap;
     }
 
-    /* Bottom Dock & Customizer di HP */
+    /* Floating BGM Capsule / Pill di HP (Kompak, tidak membentang penuh) */
     .bottom-left-dock {
-        bottom: 14px;
-        left: 14px;
-        right: 14px;
+        position: fixed;
+        bottom: max(16px, env(safe-area-inset-bottom));
+        left: 16px;
+        right: auto;
+        z-index: 100;
+        display: inline-flex;
+        align-items: center;
         gap: 10px;
-        justify-content: flex-start;
-        background-color: rgba(18, 18, 18, 0.88);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        backdrop-filter: blur(6px);
-        padding: 6px 10px;
-        border-radius: 8px;
+        background: rgba(14, 14, 14, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        padding: 5px 14px 5px 6px;
+        border-radius: 999px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
+        max-width: calc(100vw - 32px);
+    }
+
+    .bgm-minimal-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+    }
+
+    .bgm-minimal {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        opacity: 0.95;
     }
 
     .vinyl-disc {
-        width: 34px;
-        height: 34px;
+        width: 36px;
+        height: 36px;
+        border-color: rgba(255, 255, 255, 0.35);
     }
 
     .vinyl-center-hole {
@@ -585,26 +652,33 @@ body {
     }
 
     .bgm-track-wrap {
-        width: 95px;
+        width: 155px;
+        max-width: 52vw;
     }
 
     .bgm-track-marquee {
-        font-size: 0.78rem;
+        font-size: 0.82rem;
+        font-weight: 500;
+        letter-spacing: -0.01em;
     }
 
     .bgm-hidden-panel {
         position: fixed;
-        bottom: 64px;
-        left: 14px;
-        padding: 10px 14px;
+        bottom: calc(max(16px, env(safe-area-inset-bottom)) + 54px);
+        left: 16px;
+        padding: 8px 14px;
         background-color: rgba(18, 18, 18, 0.96);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        z-index: 101;
     }
 
     .bgm-volume-control {
-        font-size: 0.78rem;
-        gap: 6px;
+        font-size: 0.8rem;
+        gap: 8px;
     }
 
     .bgm-vol-slider {
@@ -612,63 +686,89 @@ body {
     }
 
     .minimal-slider {
-        width: 95px;
+        width: 85px;
         height: 3px;
     }
 
     .minimal-slider::-webkit-slider-thumb {
-        width: 15px;
-        height: 15px;
+        width: 14px;
+        height: 14px;
     }
 
     .minimal-slider::-moz-range-thumb {
-        width: 15px;
-        height: 15px;
+        width: 14px;
+        height: 14px;
     }
 
     /* Stream Karya Horizontal di HP */
     .page-stage.has-works-open .overlap-zone {
         min-height: auto;
-        padding: 45px 22px 24px 22px;
+        padding: max(20px, env(safe-area-inset-top)) 20px 16px 20px;
     }
 
     .works-strip-viewport {
-        padding: 10px 0 95px 0;
+        padding: 10px 0 100px 0;
     }
 
     .works-strip-track {
-        gap: 14px;
-        padding: 0 14px;
+        gap: 12px;
+        padding: 0 16px;
     }
 
     .img-container {
-        height: 175px;
+        height: 185px;
     }
 
     .laggy-img {
-        max-width: 260px;
+        max-width: 270px;
     }
 
     .poster-blur-overlay {
-        padding: 16px;
+        padding: 14px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
     }
 
     .highlighted-raw-media {
         max-width: 94vw;
-        max-height: 80vh;
+        max-height: 75vh;
     }
 }
 
 @media (max-width: 400px) {
+    .overlap-zone {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
     .content {
-        font-size: 0.98rem;
+        font-size: 1.02rem;
+        line-height: 1.56;
+        margin-bottom: 24px;
+    }
+
+    .inline-links {
+        gap: 8px;
     }
 
     .inline-links a {
-        font-size: 0.85rem;
+        font-size: 0.88rem;
+        padding: 2px 4px;
     }
 
     .bgm-track-wrap {
-        width: 90px;
+        width: 120px;
+        max-width: 44vw;
+    }
+
+    .bottom-left-dock {
+        left: 12px;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        padding: 4px 12px 4px 5px;
+    }
+
+    .bgm-hidden-panel {
+        left: 12px;
+        bottom: calc(max(12px, env(safe-area-inset-bottom)) + 50px);
     }
 }
