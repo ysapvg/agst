@@ -6,7 +6,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 // Tinggal tambah/ganti link atau ID di bawah ini sesuka hati:
 // ---------------------------------------------------------------------------
 const PLAYLIST_TRACKS: string[] = [
-  'm0nSqRV-QSk', // Track 1 (default)
+  'KLVvsHcpZb8', // Track 1 (default)
   'oR30PyN0CPg', // Track 2 (lofi hip hop radio / chill)
   'sKJvJCsey84', // Track 3 (synthwave / dark ambient)
 ]
