@@ -117,23 +117,31 @@ let dragStartX = 0
 let dragStartTranslateX = 0
 let lastDragX = 0
 let rafId: number | null = null
+let cachedSetWidth = 0
+
+const updateTrackWidth = () => {
+  if (stripTrackRef.value) {
+    cachedSetWidth = stripTrackRef.value.scrollWidth / 2
+  }
+}
 
 const wrapTranslateX = () => {
-  if (!stripTrackRef.value) return
-  const setWidth = stripTrackRef.value.scrollWidth / 2
-  if (setWidth <= 0) return
+  if (cachedSetWidth <= 0) updateTrackWidth()
+  if (cachedSetWidth <= 0) return
 
   // Biar digeser ke kanan (mundur) atau ke kiri (maju) tetap nyambung tanpa batas (infinite loop)
   while (translateX.value > 0) {
-    translateX.value -= setWidth
+    translateX.value -= cachedSetWidth
   }
-  while (translateX.value <= -setWidth) {
-    translateX.value += setWidth
+  while (translateX.value <= -cachedSetWidth) {
+    translateX.value += cachedSetWidth
   }
 }
 
 const tickMarquee = () => {
-  if (showWorks.value && stripTrackRef.value) {
+  if (!showWorks.value) return
+
+  if (stripTrackRef.value) {
     if (isDragging.value) {
       currentSpeed = 0
     } else {
@@ -158,6 +166,19 @@ const tickMarquee = () => {
     }
   }
   rafId = requestAnimationFrame(tickMarquee)
+}
+
+const startMarquee = () => {
+  if (rafId !== null) cancelAnimationFrame(rafId)
+  updateTrackWidth()
+  rafId = requestAnimationFrame(tickMarquee)
+}
+
+const stopMarquee = () => {
+  if (rafId !== null) {
+    cancelAnimationFrame(rafId)
+    rafId = null
+  }
 }
 
 const onDragStart = (e: MouseEvent) => {
@@ -248,14 +269,18 @@ const handleKeyDown = (e: KeyboardEvent) => {
 }
 
 onMounted(() => {
-  rafId = requestAnimationFrame(tickMarquee)
+  if (showWorks.value) {
+    startMarquee()
+  }
+  window.addEventListener('resize', updateTrackWidth, { passive: true })
   window.addEventListener('mousemove', handleGlobalMouseMove, { passive: true })
   window.addEventListener('mouseup', handleGlobalMouseUp)
   window.addEventListener('keydown', handleKeyDown)
 })
 
 onUnmounted(() => {
-  if (rafId !== null) cancelAnimationFrame(rafId)
+  stopMarquee()
+  window.removeEventListener('resize', updateTrackWidth)
   window.removeEventListener('mousemove', handleGlobalMouseMove)
   window.removeEventListener('mouseup', handleGlobalMouseUp)
   window.removeEventListener('keydown', handleKeyDown)
@@ -319,6 +344,11 @@ const handleWorksClick = async (e: Event) => {
   showWorks.value = !showWorks.value
   if (!showWorks.value) {
     highlightedWork.value = null
+    stopMarquee()
+  } else {
+    nextTick().then(() => {
+      startMarquee()
+    })
   }
 
   if (isDesktop && heroFirst && textFirst && heroVideoRef.value && textLayerRef.value) {

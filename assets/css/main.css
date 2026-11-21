@@ -514,6 +514,7 @@ body {
     gap: 24px;
     width: max-content;
     will-change: transform;
+    transform: translateZ(0);
     padding: 0 24px;
 }
 
@@ -521,6 +522,8 @@ body {
     flex-shrink: 0;
     cursor: pointer;
     transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+    content-visibility: auto;
+    contain-intrinsic-size: 240px 240px;
 }
 
 .work-item:hover {
@@ -544,11 +547,13 @@ body {
     -webkit-user-drag: none;
     user-select: none;
     clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    will-change: clip-path;
+    transform: translateZ(0);
 }
 
 .laggy-img.is-loaded {
     animation-name: laggyRender;
-    animation-timing-function: steps(18, end);
+    animation-timing-function: steps(10, end);
     animation-fill-mode: forwards;
 }
 

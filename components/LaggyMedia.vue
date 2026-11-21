@@ -18,47 +18,87 @@ const emit = defineEmits<{
   (e: 'select', work: WorkItem): void
 }>()
 
-const isTriggered = ref(false)
+const rootRef = ref<HTMLElement | null>(null)
+const videoRef = ref<HTMLVideoElement | null>(null)
+const isVisible = ref(false)
+const hasRendered = ref(false)
 const isBroken = ref(false)
-const renderTime = (Math.random() * 1.6 + 1.1).toFixed(2)
-let timer: ReturnType<typeof setTimeout> | null = null
+// Durasi render dial-up yang snappy dan smooth (0.45s - 0.8s)
+const renderTime = (Math.random() * 0.35 + 0.45).toFixed(2)
+let observer: IntersectionObserver | null = null
 
 onMounted(() => {
-  timer = setTimeout(() => {
-    isTriggered.value = true
-  }, props.delay)
+  if (typeof window !== 'undefined' && 'IntersectionObserver' in window && rootRef.value) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (!entry) return
+
+        if (entry.isIntersecting) {
+          isVisible.value = true
+          if (!hasRendered.value) {
+            hasRendered.value = true
+          }
+          if (videoRef.value && videoRef.value.paused) {
+            videoRef.value.play().catch(() => {})
+          }
+        } else {
+          isVisible.value = false
+          // Pause offscreen video agar hemat memori & GPU decoder!
+          if (videoRef.value && !videoRef.value.paused) {
+            videoRef.value.pause()
+          }
+        }
+      },
+      {
+        rootMargin: '250px 250px 250px 250px',
+        threshold: 0.01,
+      }
+    )
+    observer.observe(rootRef.value)
+  } else {
+    isVisible.value = true
+    hasRendered.value = true
+  }
 })
 
 onUnmounted(() => {
-  if (timer) clearTimeout(timer)
+  if (observer) {
+    observer.disconnect()
+    observer = null
+  }
 })
 </script>
 
 <template>
   <div
     v-if="!isBroken"
+    ref="rootRef"
     :class="['work-item', { 'is-selected': isSelected }]"
     @click.stop="emit('select', work)"
   >
     <div class="img-container">
       <video
         v-if="work.type === 'video'"
-        :src="work.src"
-        autoplay
+        ref="videoRef"
+        :src="isVisible || hasRendered ? work.src : undefined"
+        preload="metadata"
         loop
         muted
         playsinline
-        :class="['laggy-img', { 'is-loaded': isTriggered }]"
-        :style="{ animationDuration: isTriggered ? `${renderTime}s` : '0s' }"
+        :class="['laggy-img', { 'is-loaded': hasRendered }]"
+        :style="{ animationDuration: `${renderTime}s` }"
         @error="isBroken = true"
       />
       <img
         v-else
-        :src="work.src"
+        :src="isVisible || hasRendered ? work.src : undefined"
         alt=""
+        loading="lazy"
+        decoding="async"
         draggable="false"
-        :class="['laggy-img', { 'is-loaded': isTriggered }]"
-        :style="{ animationDuration: isTriggered ? `${renderTime}s` : '0s' }"
+        :class="['laggy-img', { 'is-loaded': hasRendered }]"
+        :style="{ animationDuration: `${renderTime}s` }"
         @error="isBroken = true"
       />
     </div>
