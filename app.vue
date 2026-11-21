@@ -316,20 +316,20 @@ const handleWorksClick = async (e: Event) => {
     <div class="container">
       <!-- AREA UTAMA -->
       <div class="overlap-zone">
-        <!-- KONTEN UTAMA DENGAN HERO VIDEO -->
-        <div class="overlap-text-layer">
-          <!-- HERO LOOP VIDEO (TEPAT DI ATAS TRANSLATE) -->
-          <div class="hero-video-box">
-            <video
-              src="/hero-loop.mp4"
-              autoplay
-              loop
-              muted
-              playsinline
-              class="hero-loop-video"
-            />
-          </div>
+        <!-- HERO LOOP VIDEO (LEBIH BESAR & DOMINAN) -->
+        <div class="hero-video-box">
+          <video
+            src="/hero-loop.mp4"
+            autoplay
+            loop
+            muted
+            playsinline
+            class="hero-loop-video"
+          />
+        </div>
 
+        <!-- KONTEN UTAMA & NAVIGASI -->
+        <div class="overlap-text-layer">
           <!-- LANGUAGE SWITCHER -->
           <div class="lang-switcher sys-text">
             <a
