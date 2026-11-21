@@ -295,13 +295,83 @@ const handleColorReset = (e: Event) => {
   }
 }
 
+const heroVideoRef = ref<HTMLElement | null>(null)
+const textLayerRef = ref<HTMLElement | null>(null)
+let flipCleanup: (() => void) | null = null
+
 const handleWorksClick = async (e: Event) => {
   e.preventDefault()
+
+  if (flipCleanup) {
+    flipCleanup()
+    flipCleanup = null
+  }
+
+  const isDesktop = typeof window !== 'undefined' && window.innerWidth > 768
+  let heroFirst: DOMRect | null = null
+  let textFirst: DOMRect | null = null
+
+  if (isDesktop && heroVideoRef.value && textLayerRef.value) {
+    heroFirst = heroVideoRef.value.getBoundingClientRect()
+    textFirst = textLayerRef.value.getBoundingClientRect()
+  }
+
   showWorks.value = !showWorks.value
   if (!showWorks.value) {
     highlightedWork.value = null
-  } else {
+  }
+
+  if (isDesktop && heroFirst && textFirst && heroVideoRef.value && textLayerRef.value) {
     await nextTick()
+
+    const heroLast = heroVideoRef.value.getBoundingClientRect()
+    const textLast = textLayerRef.value.getBoundingClientRect()
+
+    const heroDeltaX = (heroFirst.left + heroFirst.width / 2) - (heroLast.left + heroLast.width / 2)
+    const heroDeltaY = (heroFirst.top + heroFirst.height / 2) - (heroLast.top + heroLast.height / 2)
+    const heroScaleX = heroLast.width > 0 ? heroFirst.width / heroLast.width : 1
+    const heroScaleY = heroLast.height > 0 ? heroFirst.height / heroLast.height : 1
+
+    const textDeltaX = (textFirst.left + textFirst.width / 2) - (textLast.left + textLast.width / 2)
+    const textDeltaY = (textFirst.top + textFirst.height / 2) - (textLast.top + textLast.height / 2)
+
+    const heroEl = heroVideoRef.value
+    const textEl = textLayerRef.value
+
+    heroEl.style.transition = 'none'
+    heroEl.style.transformOrigin = 'center center'
+    heroEl.style.transform = `translate(${heroDeltaX}px, ${heroDeltaY}px) scale(${heroScaleX}, ${heroScaleY})`
+
+    textEl.style.transition = 'none'
+    textEl.style.transformOrigin = 'center center'
+    textEl.style.transform = `translate(${textDeltaX}px, ${textDeltaY}px)`
+
+    // Force layout reflow
+    void heroEl.offsetHeight
+
+    requestAnimationFrame(() => {
+      const duration = '650ms'
+      const easing = 'cubic-bezier(0.22, 1, 0.36, 1)'
+
+      heroEl.style.transition = `transform ${duration} ${easing}`
+      heroEl.style.transform = ''
+
+      textEl.style.transition = `transform ${duration} ${easing}`
+      textEl.style.transform = ''
+
+      const cleanup = () => {
+        heroEl.style.transition = ''
+        heroEl.style.transform = ''
+        heroEl.style.transformOrigin = ''
+        textEl.style.transition = ''
+        textEl.style.transform = ''
+        textEl.style.transformOrigin = ''
+        heroEl.removeEventListener('transitionend', cleanup)
+        flipCleanup = null
+      }
+      flipCleanup = cleanup
+      heroEl.addEventListener('transitionend', cleanup, { once: true })
+    })
   }
 }
 </script>
@@ -317,7 +387,7 @@ const handleWorksClick = async (e: Event) => {
       <!-- AREA UTAMA -->
       <div class="overlap-zone">
         <!-- HERO LOOP VIDEO (LEBIH BESAR & DOMINAN) -->
-        <div class="hero-video-box">
+        <div ref="heroVideoRef" class="hero-video-box">
           <video
             src="/hero-loop.mp4"
             autoplay
@@ -329,7 +399,7 @@ const handleWorksClick = async (e: Event) => {
         </div>
 
         <!-- KONTEN UTAMA & NAVIGASI -->
-        <div class="overlap-text-layer">
+        <div ref="textLayerRef" class="overlap-text-layer">
           <!-- LANGUAGE SWITCHER -->
           <div class="lang-switcher sys-text">
             <a
@@ -453,34 +523,36 @@ const handleWorksClick = async (e: Event) => {
       </div>
 
       <!-- HORIZONTAL STREAM (KANAN KE KIRI LAMBAT, BERHENTI PAS MOUSE DEKAT, BISA DI-DRAG MAJU/MUNDUR) -->
-      <div
-        v-if="showWorks"
-        id="works-gallery"
-        ref="stripViewportRef"
-        :class="['works-strip-viewport', { 'is-dragging': isDragging }]"
-        @mouseenter="isMouseNear = true"
-        @mouseleave="isMouseNear = false"
-        @mousedown="onDragStart"
-        @touchstart.passive="onTouchStart"
-        @touchmove.passive="onTouchMove"
-        @touchend.passive="onTouchEnd"
-        @wheel.prevent="onStripWheel"
-      >
+      <Transition name="works-stream">
         <div
-          ref="stripTrackRef"
-          class="works-strip-track"
-          :style="{ transform: `translate3d(${translateX}px, 0, 0)` }"
+          v-if="showWorks"
+          id="works-gallery"
+          ref="stripViewportRef"
+          :class="['works-strip-viewport', { 'is-dragging': isDragging }]"
+          @mouseenter="isMouseNear = true"
+          @mouseleave="isMouseNear = false"
+          @mousedown="onDragStart"
+          @touchstart.passive="onTouchStart"
+          @touchmove.passive="onTouchMove"
+          @touchend.passive="onTouchEnd"
+          @wheel.prevent="onStripWheel"
         >
-          <LaggyMedia
-            v-for="item in LOOP_WORKS"
-            :key="item.uid"
-            :work="item"
-            :delay="item.delay"
-            :is-selected="highlightedWork?.id === item.id"
-            @select="handleSelectWork"
-          />
+          <div
+            ref="stripTrackRef"
+            class="works-strip-track"
+            :style="{ transform: `translate3d(${translateX}px, 0, 0)` }"
+          >
+            <LaggyMedia
+              v-for="item in LOOP_WORKS"
+              :key="item.uid"
+              :work="item"
+              :delay="item.delay"
+              :is-selected="highlightedWork?.id === item.id"
+              @select="handleSelectWork"
+            />
+          </div>
         </div>
-      </div>
+      </Transition>
     </div>
 
     <!-- HIGHLIGHT POSTER OVERLAY (SELURUH LAYAR LAINNYA BLUR) -->
