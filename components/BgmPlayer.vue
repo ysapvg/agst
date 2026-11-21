@@ -153,17 +153,8 @@ const handleVolumeChange = () => {
 
 <template>
   <div class="bgm-root">
-    <!-- FULLSCREEN LOW-OPACITY BACKGROUND VIDEO SAAT MUSIK PLAY -->
-    <Teleport to="body">
-      <div
-        :class="['yt-bg-video-stage', { 'is-active': isPlaying }]"
-        aria-hidden="true"
-      >
-        <div class="yt-bg-video-Aspect">
-          <div id="yt-player-container"></div>
-        </div>
-      </div>
-    </Teleport>
+    <!-- HIDDEN AUDIO-ONLY YOUTUBE PLAYER (TIDAK MUNCUL DI BACKGROUND) -->
+    <div id="yt-player-container" class="yt-audio-only" aria-hidden="true"></div>
 
     <!-- MINIMALIST BORDERLESS VINYL PLAYER + HIDDEN VOLUME/PLAYLIST PANEL -->
     <div :class="['bgm-minimal-wrap', { 'is-open': isControlsOpen }]">

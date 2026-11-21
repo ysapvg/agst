@@ -3,12 +3,13 @@
 :root {
     --bg-color: #000000;
     --text-color: #ededed;
-    --link-blue: #00a5ff; 
+    --link-blue: #a855f7; 
     --border-color: #262626;
     --hover-bg: #141414;
     --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-mono: 'Geist Mono', 'Consolas', monospace;
     --font-pixel: 'Silkscreen', 'Geist Mono', monospace;
+    --highlight-purple: #8b2cf5;
 }
 
 * {
@@ -18,8 +19,8 @@
 }
 
 ::selection {
-    background-color: #ffffff;
-    color: #000000;
+    background-color: var(--highlight-purple);
+    color: #ffffff;
 }
 
 /* --- BRUTALIST CUSTOM SCROLLBAR --- */
@@ -132,9 +133,9 @@ body {
 .content p { margin-bottom: 20px; color: #e5e5e5; transition: color 0s; }
 .content strong { font-weight: 600; color: #ffffff; padding: 1px 4px; margin: 0 -2px; transition: background-color 0.1s steps(2), color 0.1s steps(2); cursor: crosshair; display: inline-block; }
 /* Highlight kotak saat hover */
-.content strong:hover { background-color: #ffff00 !important; color: #000000 !important; }
+.content strong:hover { background-color: var(--highlight-purple) !important; color: #ffffff !important; }
 .content a { font-family: var(--font-sans); font-weight: 400; color: inherit; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; background: none; padding: 1px 4px; margin: 0 -2px; transition: background-color 0.1s steps(2), color 0.1s steps(2); text-transform: lowercase; display: inline-block; }
-.content a:hover { background-color: #ffff00 !important; color: #000000 !important; text-decoration: none; }
+.content a:hover { background-color: var(--highlight-purple) !important; color: #ffffff !important; text-decoration: none; }
 
 /* Glitch scramble font effect: switch to pixel/mono when scrambling */
 .scramble-word.is-scrambling,
@@ -148,7 +149,7 @@ a.is-scrambling {
 .links-section { margin-bottom: 0; }
 .inline-links { list-style: none; padding: 14px 0; margin: 0; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
 .inline-links a { font-family: var(--font-mono); font-weight: 500; font-size: 1.05rem; letter-spacing: 0.01em; color: #ffffff; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; background: none; padding: 2px 5px; text-transform: lowercase; transition: background-color 0.1s steps(2), color 0.1s steps(2); cursor: pointer; display: inline-block; }
-.inline-links a:hover { background-color: #ffff00; color: #000000; text-decoration: none; }
+.inline-links a:hover { background-color: var(--highlight-purple); color: #ffffff; text-decoration: none; }
 
 /* --- MODAL WORKS (Commission / System Prompt) --- */
 .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.92); z-index: 999; justify-content: center; align-items: center; }
@@ -175,42 +176,17 @@ a.is-scrambling {
     flex-wrap: wrap;
 }
 
-/* --- FULLSCREEN LOW-OPACITY YOUTUBE VIDEO BACKGROUND --- */
-.yt-bg-video-stage {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 25;
-    pointer-events: none;
-    overflow: hidden;
-    opacity: 0;
-    mix-blend-mode: screen;
-    transition: opacity 0.8s ease;
-}
-
-.yt-bg-video-stage.is-active {
-    opacity: 0.18;
-}
-
-.yt-bg-video-Aspect {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100vw;
-    height: 56.25vw; /* 16:9 ratio */
-    min-height: 100vh;
-    min-width: 177.78vh; /* 16:9 ratio */
-    transform: translate(-50%, -50%) scale(1.08);
-    pointer-events: none;
-}
-
-.yt-bg-video-Aspect iframe,
-#yt-player-container {
-    width: 100% !important;
-    height: 100% !important;
-    border: 0;
-    pointer-events: none;
+/* --- HIDDEN AUDIO-ONLY YOUTUBE PLAYER --- */
+.yt-audio-only,
+#yt-player-container.yt-audio-only {
+    position: fixed !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 200px !important;
+    height: 200px !important;
+    opacity: 0.001 !important;
+    pointer-events: none !important;
+    z-index: -9999 !important;
 }
 
 /* --- BGM PLAYER MINIMALIST (NO BOX) + HIDDEN VOLUME/PLAYLIST PANEL --- */
