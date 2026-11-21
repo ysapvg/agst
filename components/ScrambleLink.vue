@@ -12,12 +12,14 @@ const emit = defineEmits<{
 
 const GLITCH_CHARS = '!<>-_\\/[]{}—=+*^?#________'
 const displayText = ref(props.label)
+const isScrambling = ref(false)
 let intervalId: ReturnType<typeof setInterval> | null = null
 
 const triggerScramble = () => {
   let iteration = 0
   const step = Math.max(0.45, props.label.length / 9)
   if (intervalId) clearInterval(intervalId)
+  isScrambling.value = true
 
   intervalId = setInterval(() => {
     displayText.value = props.label
@@ -31,6 +33,7 @@ const triggerScramble = () => {
 
     if (iteration >= props.label.length) {
       displayText.value = props.label
+      isScrambling.value = false
       if (intervalId) clearInterval(intervalId)
     }
     iteration += step
@@ -47,6 +50,7 @@ onUnmounted(() => {
     :href="href"
     :target="href.startsWith('http') ? '_blank' : undefined"
     :rel="href.startsWith('http') ? 'noopener noreferrer' : undefined"
+    :class="{ 'is-scrambling': isScrambling }"
     @mouseenter="triggerScramble"
     @click="(e) => emit('click', e)"
   >

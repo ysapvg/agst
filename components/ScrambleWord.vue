@@ -7,6 +7,7 @@ const props = defineProps<{
 
 const GLITCH_CHARS = '!<>-_\\/[]{}—=+*^?#________'
 const displayText = ref(props.label)
+const isScrambling = ref(false)
 let intervalId: ReturnType<typeof setInterval> | null = null
 
 watch(
@@ -18,9 +19,9 @@ watch(
 
 const triggerScramble = () => {
   let iteration = 0
-  // ~24 FPS (42ms/frame) supaya scramble tetap kelihatan jelas tapi responsif & gak berasa ngelag
   const step = Math.max(0.45, props.label.length / 9)
   if (intervalId) clearInterval(intervalId)
+  isScrambling.value = true
 
   intervalId = setInterval(() => {
     displayText.value = props.label
@@ -34,6 +35,7 @@ const triggerScramble = () => {
 
     if (iteration >= props.label.length) {
       displayText.value = props.label
+      isScrambling.value = false
       if (intervalId) clearInterval(intervalId)
     }
     iteration += step
@@ -47,7 +49,7 @@ onUnmounted(() => {
 
 <template>
   <strong
-    class="scramble-word"
+    :class="['scramble-word', { 'is-scrambling': isScrambling }]"
     @mouseenter="triggerScramble"
     @touchstart="triggerScramble"
   >{{ displayText }}</strong>
